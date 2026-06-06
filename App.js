@@ -1,105 +1,39 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { StatusBar } from "expo-status-bar";
-import { House, PlusCircle, User } from "lucide-react-native";
+import React, { useState } from "react";
 
-import SignInScreen from "./screens/SignInScreen";
-import HomeScreen from "./screens/HomeScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import AddPostScreen from "./screens/AddPostScreen";
-import EditPostScreen from "./screens/EditPostScreen";
-import AddCommentScreen from "./screens/AddCommentScreen";
-import EditCommentScreen from "./screens/EditCommentScreen";
-import { COLORS } from "./utils/colors";
+function Bio() {
+    const [formData, setFormData] = useState({
+        username: '',
+        email: '',
+        age: '',
+        city: '',
+        bio: '',
+        role: 'developer',
+    });
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value}));
+    };
 
-function MainTabs() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: COLORS.white,
-        tabBarActiveBackgroundColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.textMuted,
-        headerStyle: { backgroundColor: COLORS.primary },
-        headerTintColor: COLORS.white,
-        tabBarStyle: {
-          backgroundColor: COLORS.surface,
-          borderTopColor: COLORS.border,
-        },
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ size, color }) => <House size={size} color={color} />,
-        }}
-      />
-      <Tab.Screen
-        name="AddPost"
-        component={AddPostScreen}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <PlusCircle size={size} color={color} />
-          ),
-          title: "Add Post",
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ size, color }) => <User size={size} color={color} />,
-        }}
-      />
-    </Tab.Navigator>
-  );
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <input name="username" value={formData.username} onChange={handleChange} placeholder="Username" />
+            <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
+            <input name="age" value={formData.age} onChange={handleChange} placeholder="Age" />
+            <input name="city" value={formData.city} onChange={handleChange} placeholder="City" />
+            <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Bio" />
+            <select name="role" value={formData.role} onChange={handleChange}>
+                <option value="developer">Developer</option>
+                <option value="designer">Designer</option>
+                <option value="manager">Manager</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+    );
 }
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <StatusBar style="light" />
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: COLORS.primary },
-          headerTintColor: COLORS.white,
-        }}
-      >
-        <Stack.Screen
-          name="SignIn"
-          component={SignInScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AddPost"
-          component={AddPostScreen}
-          options={{ title: "Add Post" }}
-        />
-        <Stack.Screen
-          name="EditPost"
-          component={EditPostScreen}
-          options={{ title: "Edit Post" }}
-        />
-        <Stack.Screen
-          name="AddComment"
-          component={AddCommentScreen}
-          options={{ title: "Add Comment" }}
-        />
-        <Stack.Screen
-          name="EditComment"
-          component={EditCommentScreen}
-          options={{ title: "Edit Comment" }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+export default Bio;
